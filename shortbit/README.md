@@ -10,7 +10,8 @@ These methods all take the number of bits to slice off as an arg.
 
   1) pass in bytes
   2) convert bytes to int
-  3) create methods/functions to slice of bits and return them as either a booleaan, bytes,hex int, or string.
+  3) create methods/functions to slice of bits
+  and return them as either a booleaan, bytes,hex int, or string.
   
 </pre>
 
