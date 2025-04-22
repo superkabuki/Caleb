@@ -1,0 +1,11 @@
+[package]
+name = "shortbit_rust"
+author = "calebsg225 <calebsg2253284@gmail.com"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+num-bigint = "0.4"
