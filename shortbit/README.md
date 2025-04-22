@@ -1,9 +1,17 @@
+<pre>
+  
 Convert the ShortBit class to rust.
-ShortBit takes a string of bytes, converts it to arbitrarily large integer.
+ShortBit takes a string of bytes, converts it to an arbitrarily large integer.
 it has methods to slice of bits and return them as_int, as_hex etc..
 These methods all take the number of bits to slice off as an arg.
+  
+</pre>
 
-This is it works.
+
+* This is how it works.
+
+
+
 ```py3
 >>>> from short import ShortBit
 >>>> sb =ShortBit(b"lefthandofGod")
