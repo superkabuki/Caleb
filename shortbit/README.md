@@ -1,9 +1,16 @@
+
+
 <pre>
   
 Convert the ShortBit class to rust.
+look at short.py and short.go  and mimick the functionality. 
 ShortBit takes a string of bytes, converts it to an arbitrarily large integer.
 it has methods to slice of bits and return them as_int, as_hex etc..
 These methods all take the number of bits to slice off as an arg.
+
+  1) pass in bytes
+  2) convert bytes to int
+  3) create methods/functions to slice of bits and return them as either a booleaan, bytes,hex int, or string.
   
 </pre>
 
