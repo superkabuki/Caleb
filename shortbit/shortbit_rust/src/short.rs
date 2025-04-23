@@ -35,7 +35,7 @@ impl ShortBit {
             Some(b) => format!("{:x}", b),
             None => String::from(""),
         };
-        format!("0x{}{}", ["0", ""][(hex.len() % 2) ^ 1], hex)
+        format!("0x{}{}", ["", "0"][hex.len() & 1], hex)
     }
 
     /// returns `num_bits` of bits as bytes
