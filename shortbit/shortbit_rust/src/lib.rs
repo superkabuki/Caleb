@@ -2,6 +2,8 @@
 
 #![allow(unused)]
 
+use std::fmt::{UpperHex, format};
+
 use num_bigint::{self, BigInt, Sign};
 
 pub struct ShortBit {
@@ -30,7 +32,13 @@ impl ShortBit {
     }
 
     /// returns the hex value of `num_bits` of bits
-    pub fn as_hex(&self, num_bits: usize) {}
+    pub fn as_hex(&mut self, num_bits: usize) -> String {
+        let hex = match self.as_int(num_bits) {
+            Some(b) => format!("{:x}", b),
+            None => String::from(""),
+        };
+        format!("0x{}{}", ["0", ""][(hex.len() % 2) ^ 1], hex)
+    }
 
     /// returns `num_bits` of bits as bytes
     pub fn as_bytes(&mut self, num_bits: usize) -> Vec<u8> {
@@ -66,5 +74,6 @@ mod tests {
         assert_eq!(sb.as_flag(None), false);
         assert_eq!(sb.as_int(7), Some(BigInt::from(101)));
         assert_eq!(sb.as_bytes(32), "ftha".as_bytes());
+        assert_eq!(sb.as_hex(17), "0xdcc8");
     }
 }
