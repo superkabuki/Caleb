@@ -13,20 +13,18 @@ pub struct ShortBit {
 /// ShortBit takes a byte array and converts it into a large integer.
 impl ShortBit {
     pub fn new(bytes: &[u8]) -> ShortBit {
-        let bint = BigInt::from_bytes_be(Sign::Plus, &bytes);
         Self {
             idx: bytes.len() << 3,
             bit_size: bytes.len() << 3,
-            bits: bint,
+            bits: BigInt::from_bytes_be(Sign::Plus, &bytes),
         }
     }
 
     /// starting at `self.idx` of `self.bits`, slice off `num_bits` of bits.
     pub fn as_int(&mut self, num_bits: usize) -> Option<BigInt> {
         if self.idx >= num_bits {
-            self.idx -= num_bits;
-            let v = &self.bits >> self.idx;
-            return Some(v & !(!BigInt::from(0) << num_bits));
+            self.forward(num_bits);
+            return Some(&self.bits >> self.idx & !(!BigInt::ZERO << num_bits));
         }
         None
     }
@@ -36,8 +34,7 @@ impl ShortBit {
 
     /// returns `num_bits` of bits as bytes
     pub fn as_bytes(&mut self, num_bits: usize) -> Vec<u8> {
-        let g = self.as_int(num_bits);
-        match g {
+        match self.as_int(num_bits) {
             Some(i) => BigInt::to_bytes_be(&i).1,
             None => Vec::new(),
         }
@@ -45,8 +42,7 @@ impl ShortBit {
 
     /// returns one bit as `true` or `false`
     pub fn as_flag(&mut self, num_bits: Option<usize>) -> bool {
-        let num_bits = num_bits.unwrap_or(1);
-        match self.as_int(num_bits) {
+        match self.as_int(num_bits.unwrap_or(1)) {
             Some(b) => b & BigInt::from(1) == BigInt::from(1),
             None => false,
         }
