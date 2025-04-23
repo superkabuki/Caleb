@@ -2,8 +2,6 @@
 
 #![allow(unused)]
 
-use std::fmt::{UpperHex, format};
-
 use num_bigint::{self, BigInt, Sign};
 
 pub struct ShortBit {
