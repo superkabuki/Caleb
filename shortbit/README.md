@@ -1,4 +1,4 @@
-
+( yeah, I'm top posting, just so it makes less sense. )
 __Null/ Nil values__
 
 Here's a simplified example to demonstrate what I mean, maybe there is a better way to handle it in rust.
