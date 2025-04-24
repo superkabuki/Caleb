@@ -1,7 +1,10 @@
 
 __Null/ Nil values__
 
-Here's a simplified example to demonstrate what I mean, maybe there is a better way tp handle it in rust.
+Here's a simplified example to demonstrate what I mean, maybe there is a better way to handle it in rust.
+I also included the go version, which is actually a good bit different. __I am a practicing hypocrite.__
+The go version probably works a good bit closer to rust. 
+
 
 __The problem is how to omit fields from a struct if they have not been set.__
 
