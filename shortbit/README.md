@@ -1,4 +1,42 @@
 
+__Null/ Nil values__
+
+Here's a simplified example to demonstrate what I mean, maybe there is a better way tp handle it in rust.
+
+__The problem is how to omit fields from a struct if they have not been set.__
+
+```py3
+>>>> from threefive import TimeSignal
+
+
+>>>> ts=TimeSignal()
+>>>> ts.time_specified_flag=False
+>>>> ts.encode()
+>>>> ts.show()
+{
+    "command_length": 0,
+    "command_type": 6,
+    "name": "Time Signal",   
+    "time_specified_flag": false        # <---    No pts_time
+}
+
+>>>> ts2=TimeSignal()
+>>>> ts2.time_specified_flag=True
+>>>> ts2.pts_time=1234.567890
+>>>> ts2.encode()
+>>>> ts.show()
+{
+    "command_length": 0,
+    "command_type": 6,
+    "name": "Time Signal",
+    "time_specified_flag": true,    # <--- time_specified_flag is set
+    "pts_time": 1234.56789          # <--- so pts_time is included
+}
+```
+
+
+  
+  
 
 <pre>
   
