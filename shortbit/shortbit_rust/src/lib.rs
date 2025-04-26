@@ -13,12 +13,14 @@ mod tests {
         let mut sb = ShortBit::new("lefthandtoGod".as_bytes());
 
         assert_eq!(sb.as_int(8), Some(BigInt::from(108)));
-        assert_eq!(sb.as_flag(None), false);
+        assert_eq!(sb.as_flag(None), Some(false));
         assert_eq!(sb.as_int(7), Some(BigInt::from(101)));
-        assert_eq!(sb.as_bytes(32), "ftha".as_bytes());
-        assert_eq!(sb.as_hex(17), "0xdcc8");
+        assert_eq!(sb.as_bytes(32), Some("ftha".as_bytes().to_vec()));
+        assert_eq!(sb.as_hex(17), Some("0xdcc8".to_string()));
     }
 
     #[test]
-    fn test_splice_info_section() {}
+    fn test_splice_info_section() {
+        // NO TESTS
+    }
 }

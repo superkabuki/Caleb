@@ -30,27 +30,27 @@ impl ShortBit {
     }
 
     /// returns the hex value of `num_bits` of bits
-    pub fn as_hex(&mut self, num_bits: usize) -> String {
+    pub fn as_hex(&mut self, num_bits: usize) -> Option<String> {
         let hex = match self.as_int(num_bits) {
             Some(b) => format!("{:x}", b),
-            None => String::from(""),
+            None => return None,
         };
-        format!("0x{}{}", ["", "0"][hex.len() & 1], hex)
+        Some(format!("0x{}{}", ["", "0"][hex.len() & 1], hex))
     }
 
     /// returns `num_bits` of bits as bytes
-    pub fn as_bytes(&mut self, num_bits: usize) -> Vec<u8> {
+    pub fn as_bytes(&mut self, num_bits: usize) -> Option<Vec<u8>> {
         match self.as_int(num_bits) {
-            Some(i) => BigInt::to_bytes_be(&i).1,
-            None => Vec::new(),
+            Some(i) => Some(BigInt::to_bytes_be(&i).1),
+            None => None,
         }
     }
 
     /// returns one bit as `true` or `false`
-    pub fn as_flag(&mut self, num_bits: Option<usize>) -> bool {
+    pub fn as_flag(&mut self, num_bits: Option<usize>) -> Option<bool> {
         match self.as_int(num_bits.unwrap_or(1)) {
-            Some(b) => b & BigInt::from(1) == BigInt::from(1),
-            None => false,
+            Some(b) => Some(b & BigInt::from(1) == BigInt::from(1)),
+            None => None,
         }
     }
 
