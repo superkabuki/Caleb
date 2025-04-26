@@ -68,6 +68,15 @@ impl SpliceInfoSection {
         // rust does not natively give a way to loop through struct properties.
         // There is a way with serde, but I did not implement it.
         // The other version of `info` implements SpliceInfoSection with a hashmap
+        
+        // Here's one way
+        // https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=66403bddbba1a79a3722eb9f4ed62099
+     
+        // here's about seven more
+        // https://users.rust-lang.org/t/how-to-iterate-over-fields-of-struct/53356/5
+    
+        // Did you not see what I wrote on the README?
+        // It doesn't matter how you exclude them, but JSON doesn't do Nil values.
     }
 
     /// returns instance as a `kv_clean`ed hashmap
