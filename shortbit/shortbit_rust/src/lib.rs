@@ -3,6 +3,7 @@
 pub mod info;
 pub mod info2;
 pub mod short;
+pub mod timesignal;
 
 #[cfg(test)]
 mod tests {
@@ -22,6 +23,11 @@ mod tests {
 
     #[test]
     fn test_splice_info_section() {
+        // NO TESTS
+    }
+
+    #[test]
+    fn test_time_signal() {
         // NO TESTS
     }
 }
