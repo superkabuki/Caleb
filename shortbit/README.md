@@ -1,3 +1,8 @@
+it's not an opinion for you to agree with, it's math man.
+![image](https://github.com/user-attachments/assets/1cf3fed6-c00c-43a0-b5de-02d71c312faf)
+
+https://www.devjobsscanner.com/blog/top-8-most-demanded-programming-languages/
+
 ( yeah, I'm top posting, just so it makes less sense. )
 __Null/ Nil values__
 
