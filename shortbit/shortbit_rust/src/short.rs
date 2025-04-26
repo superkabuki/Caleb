@@ -10,6 +10,15 @@ pub struct ShortBit {
     bits: BigInt,
 }
 
+#[derive(Debug, PartialEq)]
+pub enum SbType {
+    Int(BigInt),
+    Hex(String),
+    Flag(bool),
+    Bytes(Vec<u8>),
+    None,
+}
+
 /// ShortBit takes a byte array and converts it into a large integer.
 impl ShortBit {
     pub fn new(bytes: &[u8]) -> ShortBit {
@@ -21,36 +30,36 @@ impl ShortBit {
     }
 
     /// starting at `self.idx` of `self.bits`, slice off `num_bits` of bits.
-    pub fn as_int(&mut self, num_bits: usize) -> Option<BigInt> {
+    pub fn as_int(&mut self, num_bits: usize) -> SbType {
         if self.idx >= num_bits {
             self.forward(num_bits);
-            return Some(&self.bits >> self.idx & !(!BigInt::ZERO << num_bits));
+            return SbType::Int(&self.bits >> self.idx & !(!BigInt::ZERO << num_bits));
         }
-        None
+        SbType::None
     }
 
     /// returns the hex value of `num_bits` of bits
-    pub fn as_hex(&mut self, num_bits: usize) -> Option<String> {
+    pub fn as_hex(&mut self, num_bits: usize) -> SbType {
         let hex = match self.as_int(num_bits) {
-            Some(b) => format!("{:x}", b),
-            None => return None,
+            SbType::Int(b) => format!("{:x}", b),
+            _ => return SbType::None,
         };
-        Some(format!("0x{}{}", ["", "0"][hex.len() & 1], hex))
+        SbType::Hex(format!("0x{}{}", ["", "0"][hex.len() & 1], hex))
     }
 
     /// returns `num_bits` of bits as bytes
-    pub fn as_bytes(&mut self, num_bits: usize) -> Option<Vec<u8>> {
+    pub fn as_bytes(&mut self, num_bits: usize) -> SbType {
         match self.as_int(num_bits) {
-            Some(i) => Some(BigInt::to_bytes_be(&i).1),
-            None => None,
+            SbType::Int(i) => SbType::Bytes(BigInt::to_bytes_be(&i).1),
+            _ => SbType::None,
         }
     }
 
     /// returns one bit as `true` or `false`
-    pub fn as_flag(&mut self, num_bits: Option<usize>) -> Option<bool> {
+    pub fn as_flag(&mut self, num_bits: Option<usize>) -> SbType {
         match self.as_int(num_bits.unwrap_or(1)) {
-            Some(b) => Some(b & BigInt::from(1) == BigInt::from(1)),
-            None => None,
+            SbType::Int(b) => SbType::Flag(b & BigInt::from(1) == BigInt::from(1)),
+            _ => SbType::None,
         }
     }
 
