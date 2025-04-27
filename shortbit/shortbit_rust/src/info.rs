@@ -92,8 +92,8 @@ impl SpliceInfoSection {
         SIType::TimeStamp(self.as_90k(pts_adjustment_ticks))
     }
 
-    /// converts `SbType` enums into strings
-    fn map_sb_string(&self, v: &SbType) -> SIType {
+    /// converts `SbType` enums into `SIType`
+    fn map_sb_si(&self, v: &SbType) -> SIType {
         match v {
             SbType::Hex(h) => SIType::Hex(h.clone()),
             SbType::Int(i) => SIType::Int(i.clone()),
@@ -112,7 +112,7 @@ impl SpliceInfoSection {
                 ("section_syntax_indicator", sb.as_flag(Some(1))),
                 ("private", sb.as_flag(Some(1))),
             ]
-            .map(|v| (v.0.to_string(), self.map_sb_string(&v.1))),
+            .map(|v| (v.0.to_string(), self.map_sb_si(&v.1))),
         );
 
         // sap type
@@ -120,7 +120,7 @@ impl SpliceInfoSection {
 
         self.spliced_info.extend(
             [
-                ("sap_type", self.map_sb_string(&sap_type)),
+                ("sap_type", self.map_sb_si(&sap_type)),
                 ("sap_details", self.get_sap(sap_type)),
             ]
             .map(|v| (v.0.to_string(), v.1)),
@@ -133,7 +133,7 @@ impl SpliceInfoSection {
                 ("encrypted_packet", sb.as_flag(Some(1))),
                 ("encryption_algorithm", sb.as_int(6)),
             ]
-            .map(|v| (v.0.to_string(), self.map_sb_string(&v.1))),
+            .map(|v| (v.0.to_string(), self.map_sb_si(&v.1))),
         );
         self.spliced_info
             .insert("pts_adjustment".to_string(), self.get_pts(sb.as_int(33)));
@@ -144,7 +144,7 @@ impl SpliceInfoSection {
                 ("splice_command_length", sb.as_int(8)),
                 ("splice_command_type", sb.as_int(8)),
             ]
-            .map(|v| (v.0.to_string(), self.map_sb_string(&v.1))),
+            .map(|v| (v.0.to_string(), self.map_sb_si(&v.1))),
         );
     }
 }
