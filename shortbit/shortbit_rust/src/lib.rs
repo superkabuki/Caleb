@@ -1,6 +1,7 @@
 //! src/lib.rs
 
 pub mod info;
+pub mod info2;
 pub mod short;
 
 #[cfg(test)]
