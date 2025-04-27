@@ -80,6 +80,29 @@ impl SpliceInfoSection {
         }
     }
 
+    /**
+    Will this handle recursion?  
+    What happens if a struct  has other structs embedded in it? 
+
+    I was thinking, what if you kept track of the fields of the struct that you did set, 
+    rather than the ones that you did not.
+    When you set Table_Id, make a note that you just set it.
+    
+    Instead of excluding what you didn't set,
+    only include what you did set,
+
+    Along those lines, just make a hashmap as you decode with shortbit, 
+    store everything in the hashmap, if it's not set, it won't be in the hashmap,
+    you can avoid kv_cleaning altogether.
+
+    Once you have your hash map, marshal the data into the SpliceInfoSection, 
+    the keys of the hasmap are the fields that are set and should be in the JSON.
+
+    Does that kake sense to you?
+    
+    **/
+
+    
     /// removes items if the value is 'None'. Returns a hashmap.
     fn kv_clean(&self) -> HashMap<String, String> {
         self.iter()
