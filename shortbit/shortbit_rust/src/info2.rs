@@ -97,8 +97,9 @@ impl SpliceInfoSection {
 
     Once you have your hash map, marshal the data into the SpliceInfoSection, 
     the keys of the hasmap are the fields that are set and should be in the JSON.
+    Thst's what I do with xml, parse the data into hash map, and then marshal that into a SpliceInfoSection instance.
 
-    Does that kake sense to you?
+    Does that make sense to you?
     
     **/
 
