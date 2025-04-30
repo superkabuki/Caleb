@@ -14,17 +14,46 @@ static SAPS: [&'static str; 4] = [
     "No Sap Type",
 ];
 
+#[derive(Clone)]
 pub enum SIType {
-    Int(BigInt),
+    Int(u64),
     Hex(String),
     Flag(bool),
     Bytes(Vec<u8>),
     SapType(String),
     TimeStamp(f64),
+    // info.py implies this could be possible
+    HashMap(HashMap<String, SIType>),
+    // info.py implies this could be possible
+    OtherArray(Vec<SIType>),
+    SpliceInfoSection(Box<SpliceInfoSection>),
+    // TimeSignal(Box<TimeSignal>),
+    // ...
     None,
 }
 
+/// `Number` types for json conversion
+#[derive(Clone)]
+pub enum Number {
+    Float(f64),
+    Byte(u8),
+    Int(u64),
+    SIng(i64),
+}
+
+/// recursive clean json enum
+#[derive(Clone)]
+pub enum CleanJson {
+    Bool(bool),
+    Number(Number),
+    String(String),
+    Array(Vec<CleanJson>),
+    Object(HashMap<String, CleanJson>),
+    Null,
+}
+
 /// The SCTE-35 splice info section
+#[derive(Clone)]
 pub struct SpliceInfoSection {
     table_id: SIType,                 // hex
     section_syntax_indicator: SIType, // flag
@@ -80,29 +109,85 @@ impl SpliceInfoSection {
         }
     }
 
-    /// removes items if the value is 'None'. Returns a hashmap.
-    fn kv_clean(&self) -> HashMap<String, String> {
-        self.iter()
-            .filter_map(|(k, v)| match v {
-                SIType::Int(i) => Some((k.to_owned(), format!("{}", i))),
-                SIType::Hex(h) => Some((k.to_owned(), h.to_owned())),
-                SIType::Flag(f) => Some((k.to_owned(), format!("{}", f))),
-                SIType::Bytes(b) => {
-                    if b.len() == 0 {
-                        return None;
-                    }
-                    Some((k.to_owned(), format!("{:?}", b)))
-                }
-                SIType::SapType(s) => Some((k.to_owned(), s.to_owned())),
-                SIType::TimeStamp(t) => Some((k.to_owned(), format!("{}", t))),
+    /**
+    Will this handle recursion?
+    CALEB: It does now. I've implemented it close to how info.py does it. I'm not a fan of it though:
+    if I were to do this on my own I would try to avoid using recursion to begin with. That would be
+    the rust way, at least. I understand that for a general json converter, recursion (or another
+    method that accounts for an unknown amount of data) is difficult to avoid, but for this
+    specific case I think it can be. I could be wrong: I don't know SCTE-35 that well.
 
-                _ => None,
+    NOTE: I have not yet implemented a direct struct to JSON converter, or imported a crate for it.
+    Right now `get` returns a HashMap preparing for that conversion.
+
+
+    What happens if a struct  has other structs embedded in it?
+    CALEB: I have included the way I would handle different structs, commented out.
+
+    I was thinking, what if you kept track of the fields of the struct that you did set,
+    rather than the ones that you did not.
+    When you set Table_Id, make a note that you just set it.
+
+    Instead of excluding what you didn't set,
+    only include what you did set,
+
+    Along those lines, just make a hashmap as you decode with shortbit,
+    store everything in the hashmap, if it's not set, it won't be in the hashmap,
+    you can avoid kv_cleaning altogether.
+    CALEB: I could explore that. I tried a version of that, which you can see in `info.rs`, in a previous
+    commit, though it's not exactly the same as you've described here.
+
+
+    Once you have your hash map, marshal the data into the SpliceInfoSection,
+    the keys of the hasmap are the fields that are set and should be in the JSON.
+    Thst's what I do with xml, parse the data into hash map, and then marshal that into a SpliceInfoSection instance.
+
+    Does that make sense to you?
+
+    **/
+
+    /// returns json struct, removing bad values
+    fn kv_clean(&self) -> HashMap<String, CleanJson> {
+        fn rec_clean(sit: SIType) -> CleanJson {
+            match sit {
+                SIType::Int(i) => CleanJson::Number(Number::Int(i)),
+                SIType::Hex(h) => CleanJson::String(h),
+                SIType::Flag(f) => CleanJson::Bool(f),
+                SIType::Bytes(b) => CleanJson::Array(
+                    b.iter()
+                        .map(|u| CleanJson::Number(Number::Byte(*u)))
+                        .collect(),
+                ),
+                SIType::SapType(st) => CleanJson::String(st),
+                SIType::TimeStamp(ts) => CleanJson::Number(Number::Float(ts)),
+                SIType::HashMap(hs) => CleanJson::Object(
+                    hs.iter()
+                        .map(|(k, v)| (k.to_owned(), rec_clean(v.clone())))
+                        .collect(),
+                ),
+                SIType::OtherArray(oa) => {
+                    CleanJson::Array(oa.iter().map(|v| rec_clean(v.clone())).collect())
+                }
+                SIType::SpliceInfoSection(sis) => CleanJson::Object(sis.get()),
+                // SIType::TimeSignal(ts) => CleanJson::Object(ts.get()),
+                // ...
+                _ => CleanJson::Null,
+            }
+        }
+        self.iter()
+            .filter_map(|(k, v)| {
+                let val = rec_clean(v.clone());
+                if let CleanJson::Null = val {
+                    None
+                } else {
+                    Some((k.to_owned(), val))
+                }
             })
             .collect()
     }
 
     /// returns instance as a `kv_clean`ed hashmap
-    pub fn get(&self) -> HashMap<String, String> {
+    pub fn get(&self) -> HashMap<String, CleanJson> {
         self.kv_clean()
     }
 
@@ -131,10 +216,10 @@ impl SpliceInfoSection {
     fn map_sb_si(&self, v: &SbType) -> SIType {
         match v {
             SbType::Hex(h) => SIType::Hex(h.clone()),
-            SbType::Int(i) => SIType::Int(i.clone()),
+            SbType::Int(i) => SIType::Int(i.to_u64_digits().1[0]),
             SbType::Flag(f) => SIType::Flag(f.clone()),
             SbType::Bytes(b) => SIType::Bytes(b.clone()),
-            SbType::None => SIType::None,
+            _ => SIType::None,
         }
     }
 
@@ -142,13 +227,13 @@ impl SpliceInfoSection {
     pub fn decode(&mut self, bites: &[u8]) {
         let mut shortb = ShortBit::new(bites);
         self.table_id = self.map_sb_si(&shortb.as_hex(8));
-        self.section_syntax_indicator = self.map_sb_si(&shortb.as_flag(Some(1)));
-        self.private = self.map_sb_si(&shortb.as_flag(Some(1)));
+        self.section_syntax_indicator = self.map_sb_si(&shortb.as_flag(None));
+        self.private = self.map_sb_si(&shortb.as_flag(None));
         self.sap_type = self.map_sb_si(&shortb.as_hex(2));
         self.sap_details = self.get_sap_details(&self.sap_type);
         self.section_length = self.map_sb_si(&shortb.as_int(12));
         self.protocol_version = self.map_sb_si(&shortb.as_int(8));
-        self.encrypted_packet = self.map_sb_si(&shortb.as_flag(Some(1)));
+        self.encrypted_packet = self.map_sb_si(&shortb.as_flag(None));
         self.encryption_algorithm = self.map_sb_si(&shortb.as_int(6));
         self.pts_adjustment = self.get_pts(&shortb.as_int(33));
         self.cw_index = self.map_sb_si(&shortb.as_hex(8));
