@@ -1,5 +1,9 @@
 //! src/timesignal.rs
 
+use std::collections::HashMap;
+
+use num_bigint::BigInt;
+
 /// Table 11 - time_signal()
 pub struct TimeSignal {
     command_length: TSType,
@@ -9,7 +13,14 @@ pub struct TimeSignal {
     pts_time: TSType,
 }
 
-pub enum TSType {}
+pub enum TSType {
+    Int(BigInt),
+    Time(u32),
+    String(String),
+    HashMap(HashMap<String, TSType>),
+    OtherArray(Vec<TSType>),
+    Flag(bool),
+}
 
 impl TimeSignal {
     pub fn new() {}
@@ -41,6 +52,10 @@ impl<'a> Iterator for Iter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let ret = match self.index {
             0 => ("command_length", &self.inner.command_length),
+            1 => ("command_type", &self.inner.command_type),
+            2 => ("name", &self.inner.name),
+            3 => ("time_specified_flag", &self.inner.time_specified_flag),
+            4 => ("pts_time", &self.inner.pts_time),
             _ => return None,
         };
         self.index += 1;
