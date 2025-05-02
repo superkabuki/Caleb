@@ -20,10 +20,19 @@ pub enum TSType {
     HashMap(HashMap<String, TSType>),
     OtherArray(Vec<TSType>),
     Flag(bool),
+    None,
 }
 
 impl TimeSignal {
-    pub fn new() {}
+    pub fn new() -> TimeSignal {
+        Self {
+            command_length: TSType::Int(BigInt::from(0)),
+            command_type: TSType::Int(BigInt::from(6)),
+            name: TSType::String(String::from("Time Signal")),
+            time_specified_flag: TSType::None,
+            pts_time: TSType::None,
+        }
+    }
     /// sets TimeSignal.command_length
     pub fn set_len(&self) {}
     /// _splice_time Table 14 - splice_time()
@@ -36,7 +45,7 @@ impl TimeSignal {
     pub fn get(&self) {}
     /// returns self as `kv_clean`ed json
     pub fn json(&self) {}
-    /// show prints self as json to stderr
+    /// show prints self as formated json to stderr
     pub fn show(&self) {}
     /// iterate through struct fields
     fn iter(&self) {}
