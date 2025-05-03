@@ -81,7 +81,7 @@ impl TimeSignal {
         }
     }
 
-    /// recursively removes items from a hashmap if the value is None
+    /// recursively removes items from a map if the value is None
     fn kv_clean(&self) -> BTreeMap<String, CleanJson> {
         fn rec_clean(sit: TSType) -> CleanJson {
             match sit {
@@ -127,7 +127,7 @@ impl TimeSignal {
         self.set_len(start, shortb.get_idx());
     }
 
-    /// returns instance as a `kv_clean`ed hashmap
+    /// returns instance as a `kv_clean`ed map
     pub fn get(&self) -> BTreeMap<String, CleanJson> {
         self.kv_clean()
     }

@@ -168,7 +168,7 @@ impl SpliceInfoSection {
             .collect()
     }
 
-    /// returns instance as a `kv_clean`ed hashmap
+    /// returns instance as a `kv_clean`ed map
     pub fn get(&self) -> BTreeMap<String, CleanJson> {
         self.kv_clean()
     }
