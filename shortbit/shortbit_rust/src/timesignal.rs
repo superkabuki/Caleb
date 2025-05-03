@@ -5,7 +5,7 @@ use std::collections::BTreeMap;
 use num_bigint::BigInt;
 
 use crate::{
-    json::{CleanJson, Number},
+    json::{self, CleanJson, Number},
     short::{SbType, ShortBit},
 };
 
@@ -134,14 +134,12 @@ impl TimeSignal {
 
     /// returns self as `kv_clean`ed json
     pub fn json(&self) -> String {
-        // TODO: convert hashmap of clean json into a string
-        todo!();
+        json::to_json(self.kv_clean())
     }
 
     /// show prints self as formated json to stderr
     pub fn show(&self) {
-        // TODO: print out json string data as 'pretty print' indented json
-        todo!();
+        println!("{}", json::to_pretty(self.json(), 4));
     }
 
     /// iterate through struct fields
