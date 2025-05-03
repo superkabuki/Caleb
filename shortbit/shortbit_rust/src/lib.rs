@@ -9,7 +9,7 @@ pub mod timesignal;
 #[cfg(test)]
 mod tests {
     use crate::{
-        json::{CleanJson, Number},
+        json::{CleanJson, Number, to_pretty},
         short::{SbType, ShortBit},
     };
     use num_bigint::BigInt;
@@ -57,6 +57,32 @@ mod tests {
         let converted = json::to_json(data);
         println!("{}", converted);
         assert_eq!(converted, r#"{"arr":[true,false,{"idk_what6":true,"letters":"ewtoa","number243":8}],"idk_what":true,"is_active":false,"name":"foo","number":8,"number2":8213.43982}"#.to_string());
+    }
+
+    #[test]
+    fn convert_to_pretty_json() {
+        let valid_json = r#"{"arr":[true,false,{"idk_what6":true,"letters":"ewtoa","number243":8}],"idk_what":true,"is_active":false,"name":"foo","number":8,"number2":8213.43982}"#.to_string();
+        let pretty_json = to_pretty(valid_json, 4);
+        println!("{}", pretty_json);
+        assert_eq!(
+            pretty_json,
+            r#"{
+    "arr": [
+        true,
+        false,
+        {
+            "idk_what6": true,
+            "letters": "ewtoa",
+            "number243": 8
+        }
+    ],
+    "idk_what": true,
+    "is_active": false,
+    "name": "foo",
+    "number": 8,
+    "number2": 8213.43982
+}"#
+        );
     }
 
     #[test]

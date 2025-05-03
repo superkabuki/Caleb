@@ -70,7 +70,36 @@ pub fn to_json(cj: BTreeMap<String, CleanJson>) -> String {
     format!(r#"{{{}}}"#, res.join(","))
 }
 
-/// takes in valid json, returns `pretty print` json data
-pub fn to_pretty(_json: String, _indent: u8) -> String {
-    todo!()
+/// takes in valid json data as a string, returns `pretty print` json data as a string
+pub fn to_pretty(json: String, indent: usize) -> String {
+    // TODO: determine json validity?
+
+    let tab = " ".repeat(indent);
+    let mut in_quotes = false;
+    // keep track of indent level
+    let mut l: usize = 0;
+    json.chars()
+        .map(|c| {
+            if c == '"' {
+                in_quotes = !in_quotes
+            }
+            // skip if currently inside a key or string value
+            if in_quotes {
+                return c.to_string();
+            }
+            match c {
+                ':' => format!(": "),
+                ',' => format!(",\n{}", tab.repeat(l)),
+                '[' | '{' => {
+                    l += 1;
+                    format!("{}\n{}", c, tab.repeat(l))
+                }
+                ']' | '}' => {
+                    l -= 1;
+                    format!("\n{}{}", tab.repeat(l), c)
+                }
+                _ => c.to_string(),
+            }
+        })
+        .collect()
 }
