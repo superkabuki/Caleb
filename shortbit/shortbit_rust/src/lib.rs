@@ -2,6 +2,7 @@
 
 pub mod info;
 pub mod info2;
+pub mod json;
 pub mod short;
 pub mod timesignal;
 

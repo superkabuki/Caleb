@@ -2,6 +2,7 @@
 
 //#![allow(unused)]
 
+use crate::json::{CleanJson, Number};
 use crate::short::{SbType, ShortBit};
 use num_bigint::BigInt;
 use std::collections::HashMap;
@@ -30,26 +31,6 @@ pub enum SIType {
     // TimeSignal(Box<TimeSignal>),
     // ...
     None,
-}
-
-/// `Number` types for json conversion
-#[derive(Clone)]
-pub enum Number {
-    Float(f64),
-    Byte(u8),
-    Int(u64),
-    SIng(i64),
-}
-
-/// recursive clean json enum
-#[derive(Clone)]
-pub enum CleanJson {
-    Bool(bool),
-    Number(Number),
-    String(String),
-    Array(Vec<CleanJson>),
-    Object(HashMap<String, CleanJson>),
-    Null,
 }
 
 /// The SCTE-35 splice info section
