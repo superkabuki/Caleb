@@ -29,6 +29,10 @@ impl ShortBit {
         }
     }
 
+    pub fn get_idx(&self) -> usize {
+        self.idx
+    }
+
     /// starting at `self.idx` of `self.bits`, slice off `num_bits` of bits.
     pub fn as_int(&mut self, num_bits: usize) -> SbType {
         if self.idx >= num_bits {
@@ -64,7 +68,7 @@ impl ShortBit {
     }
 
     /// advances the start point forward by `num_bits`
-    fn forward(&mut self, num_bits: usize) {
+    pub fn forward(&mut self, num_bits: usize) {
         self.idx -= num_bits;
     }
 }
