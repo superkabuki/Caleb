@@ -6,7 +6,7 @@ use crate::json::{CleanJson, Number};
 use crate::short::{SbType, ShortBit};
 use crate::timesignal::TimeSignal;
 use num_bigint::BigInt;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 /// This is not great but for now it works
 static SAPS: [&'static str; 4] = [
@@ -25,7 +25,7 @@ pub enum SIType {
     SapType(String),
     TimeStamp(f64),
     // info.py implies this could be possible
-    HashMap(HashMap<String, SIType>),
+    Map(BTreeMap<String, SIType>),
     // info.py implies this could be possible
     OtherArray(Vec<SIType>),
     SpliceInfoSection(Box<SpliceInfoSection>),
@@ -100,7 +100,7 @@ impl SpliceInfoSection {
     specific case I think it can be. I could be wrong: I don't know SCTE-35 that well.
 
     NOTE: I have not yet implemented a direct struct to JSON converter, or imported a crate for it.
-    Right now `get` returns a HashMap preparing for that conversion.
+    Right now `get` returns a BTreeMap preparing for that conversion.
 
 
     What happens if a struct  has other structs embedded in it?
@@ -129,7 +129,7 @@ impl SpliceInfoSection {
     **/
 
     /// returns json struct, removing bad values
-    fn kv_clean(&self) -> HashMap<String, CleanJson> {
+    fn kv_clean(&self) -> BTreeMap<String, CleanJson> {
         fn rec_clean(sit: SIType) -> CleanJson {
             match sit {
                 SIType::Int(i) => CleanJson::Number(Number::Int(i)),
@@ -142,7 +142,7 @@ impl SpliceInfoSection {
                 ),
                 SIType::SapType(st) => CleanJson::String(st),
                 SIType::TimeStamp(ts) => CleanJson::Number(Number::Float(ts)),
-                SIType::HashMap(hs) => CleanJson::Object(
+                SIType::Map(hs) => CleanJson::Object(
                     hs.iter()
                         .map(|(k, v)| (k.to_owned(), rec_clean(v.clone())))
                         .collect(),
@@ -169,7 +169,7 @@ impl SpliceInfoSection {
     }
 
     /// returns instance as a `kv_clean`ed hashmap
-    pub fn get(&self) -> HashMap<String, CleanJson> {
+    pub fn get(&self) -> BTreeMap<String, CleanJson> {
         self.kv_clean()
     }
 

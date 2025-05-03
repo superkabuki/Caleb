@@ -1,6 +1,6 @@
 //! src/timesignal.rs
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use num_bigint::BigInt;
 
@@ -17,7 +17,7 @@ pub enum TSType {
     Bytes(Vec<u8>),
     TimeStamp(f64),
     String(String),
-    HashMap(HashMap<String, TSType>),
+    Map(BTreeMap<String, TSType>),
     OtherArray(Vec<TSType>),
     // SCTE35Base(Box<SCTE35Base>),
     // ...
@@ -82,7 +82,7 @@ impl TimeSignal {
     }
 
     /// recursively removes items from a hashmap if the value is None
-    fn kv_clean(&self) -> HashMap<String, CleanJson> {
+    fn kv_clean(&self) -> BTreeMap<String, CleanJson> {
         fn rec_clean(sit: TSType) -> CleanJson {
             match sit {
                 TSType::Int(i) => CleanJson::Number(Number::Int(i)),
@@ -94,7 +94,7 @@ impl TimeSignal {
                         .collect(),
                 ),
                 TSType::TimeStamp(ts) => CleanJson::Number(Number::Float(ts)),
-                TSType::HashMap(hs) => CleanJson::Object(
+                TSType::Map(hs) => CleanJson::Object(
                     hs.iter()
                         .map(|(k, v)| (k.to_owned(), rec_clean(v.clone())))
                         .collect(),
@@ -128,7 +128,7 @@ impl TimeSignal {
     }
 
     /// returns instance as a `kv_clean`ed hashmap
-    pub fn get(&self) -> HashMap<String, CleanJson> {
+    pub fn get(&self) -> BTreeMap<String, CleanJson> {
         self.kv_clean()
     }
 
