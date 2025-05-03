@@ -4,6 +4,7 @@
 
 use crate::json::{CleanJson, Number};
 use crate::short::{SbType, ShortBit};
+use crate::timesignal::TimeSignal;
 use num_bigint::BigInt;
 use std::collections::HashMap;
 
@@ -28,7 +29,7 @@ pub enum SIType {
     // info.py implies this could be possible
     OtherArray(Vec<SIType>),
     SpliceInfoSection(Box<SpliceInfoSection>),
-    // TimeSignal(Box<TimeSignal>),
+    TimeSignal(Box<TimeSignal>),
     // ...
     None,
 }
@@ -150,7 +151,7 @@ impl SpliceInfoSection {
                     CleanJson::Array(oa.iter().map(|v| rec_clean(v.clone())).collect())
                 }
                 SIType::SpliceInfoSection(sis) => CleanJson::Object(sis.get()),
-                // SIType::TimeSignal(ts) => CleanJson::Object(ts.get()),
+                SIType::TimeSignal(ts) => CleanJson::Object(ts.get()),
                 // ...
                 _ => CleanJson::Null,
             }
