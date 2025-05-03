@@ -78,7 +78,7 @@ pub fn to_pretty(json: String, indent: usize) -> String {
     let mut in_quotes = false;
     // keep track of indent level
     let mut l: usize = 0;
-    // WARNING: does not handle escaped charaters, eg. \", \n, \t, etc.
+    // WARNING: does not handle escaped charaters, e.g. \", \n, \t, etc.
     json.chars()
         .map(|c| {
             if c == '"' {

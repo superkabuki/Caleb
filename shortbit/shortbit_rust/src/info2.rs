@@ -206,8 +206,8 @@ impl SpliceInfoSection {
     }
 
     /// InfoSection.decode
-    pub fn decode(&mut self, bites: &[u8]) {
-        let mut shortb = ShortBit::new(bites);
+    pub fn decode(&mut self, bytes: &[u8]) {
+        let mut shortb = ShortBit::new(bytes);
         self.table_id = self.map_sb_si(&shortb.as_hex(8));
         self.section_syntax_indicator = self.map_sb_si(&shortb.as_flag(None));
         self.private = self.map_sb_si(&shortb.as_flag(None));

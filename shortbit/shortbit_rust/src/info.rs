@@ -104,8 +104,8 @@ impl SpliceInfoSection {
     }
 
     /// InfoSection.decode
-    pub fn decode(&mut self, bites: &[u8]) {
-        let mut sb = ShortBit::new(bites);
+    pub fn decode(&mut self, bytes: &[u8]) {
+        let mut sb = ShortBit::new(bytes);
         self.spliced_info.extend(
             [
                 ("table_id", sb.as_hex(8)),
