@@ -1,5 +1,13 @@
 # Notes on stuff
 
+Monday 05/25/2025 6:00pm
+
+So earlier I was trying threefive3 and not using kv_clean to remove the None/null values. 
+There were a lot of null values in some of the JSON, I found it distracting , but I guess
+it really doesn't matter, all the code still works. I guess it's really just preference. 
+
+----------------------------
+
 Monday 05/05/2025 1:00am 
 
 I really don't get the point of all the enum types, one of the points of doing shortBit that way it is 
