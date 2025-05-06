@@ -15,12 +15,21 @@ so that you return the values in the proper types, but you're having to convert 
 all of these fields can be handled with basic types, they don't need anything special.
 Explain it to me what you're doing with all the enum types, I just don't get it.
 
+CALEB: The enum system I only implemented to more easily handle different possible types when iterating over struct fields.
+For this purpose alone it was useful, but I agree, it's far from ideal. It
+was a part of my initial solution that I didn't remove, it just stuck around. Looking at it now, the enum
+for ShortBit doesn't even need to exist at all.
+
 I did a SCTE-35 as a service, it's kind of cool.
 https://github.com/superkabuki/SCTE-35_threefive3/blob/main/sassy.md
+
+CALEB: Yeah, I saw that, pretty cool.
 
 But really, we should put this on hold and get back to the plan. 
 You need to contribute to some repos. Doesn't matter what language, 
 like I said, JavaScript jobs are plentyful and easy to get.
+
+CALEB: I have some features I want to add on one of my existing projects, in JS. I'll start with that.
 
 -------------------------------------------
 
@@ -33,6 +42,10 @@ You're making your code harder to follow because you're going sideways.
 It's like when see someone driving and switching lanes a lot, 
 they are moving sideways a lot, but not going any faster. 
 
+CALEB: Yeah, a unique enum for each struct is not good, and neither is converting one to another. If I decide to keep the enums
+around, I would have a global enum used by all structs and handle embeded structs separately. If kv_clean is not needed, or
+if the cleaning is done via some other method not relying on struct iteration, I'll remove the enum system entirely.
+
 You want your code short but readable. 
 Be lazy and only do what you have to do.
 You should be able to do what you're doing with half as TimeSignal code.
@@ -43,16 +56,24 @@ __The Worst thing a programmer can be is clever.__  Be obvious and predictable.
 Why do your own JSON?
 Only write something like that if there is a reason.
 
+CALEB: I made my own mostly just because I wanted to try it (it didn't take too long), and to limit the amount of external dependencies,
+but that doesn't matter too much I guess. But you're right, no need to reinvent the wheel in this case.
+
 What about `#[serde(skip_serializing_if="Option::is_none")]`
 
 * https://github.com/serde-rs/json/issues/513
 
 * https://stackoverflow.com/questions/53900612/how-do-i-avoid-generating-json-when-serializing-a-value-that-is-null-or-a-defaul
 
+CALEB: I already knew serde was an option, I just chose not to use it. Probably should have.
 
 iterate fields
 
 * https://github.com/ChayimFriedman2/fields-iter
   * You don't have to iterate over the fields
+
+CALEB: Same thing, avoiding dependencies. Probably should use it though.
+I'm used to the JS world, where someone can build a node project and not know what's going on because they've installed 5000 npm packages
+instead of writing their own stuff, so when something breaks, they don't know if it's their code or one of the packages at fault.
 
 ---------------
