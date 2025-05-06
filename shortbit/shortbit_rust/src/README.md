@@ -20,6 +20,10 @@ For this purpose alone it was useful, but I agree, it's far from ideal. It
 was a part of my initial solution that I didn't remove, it just stuck around. Looking at it now, the enum
 for ShortBit doesn't even need to exist at all.
 
+Adrian: That was the only thing I could think of , that you wanted to make an array and needed one type.
+Don't be afraid to abandon old ideas, I have a bad habit of do that myself.  
+
+
 I did a SCTE-35 as a service, it's kind of cool.
 https://github.com/superkabuki/SCTE-35_threefive3/blob/main/sassy.md
 
@@ -45,6 +49,9 @@ they are moving sideways a lot, but not going any faster.
 CALEB: Yeah, a unique enum for each struct is not good, and neither is converting one to another. If I decide to keep the enums
 around, I would have a global enum used by all structs and handle embeded structs separately. If kv_clean is not needed, or
 if the cleaning is done via some other method not relying on struct iteration, I'll remove the enum system entirely.
+
+Adrian: People are going to disect your code, expect a lot of critism, just learn to take it. A lot of times it's hard to hear, but worth hearing. It's hard to always see your own mistakes.
+
 
 You want your code short but readable. 
 Be lazy and only do what you have to do.
