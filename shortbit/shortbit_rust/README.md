@@ -1,5 +1,8 @@
 # SCTE-35-Rust
 
+Running cue.decode() with what code?
+
+
 Running `cue.decode()` on `b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\x9d\x90\xf8\x00\x00\xe7\xe0Y4"`
 
 results in:
