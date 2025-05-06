@@ -33,6 +33,8 @@ aic == 4107250885
 ```
 and mostly with the Cue class decoding SCTE-35.
 
+CALEB: Yeah, those first tests seem useless. How thorough do you want these tests? Decode a byte string with `cue`
+and check that all the fields are correct? What sort of bugs have you encountered after building?
 
-
-
+[pytest](https://docs.pytest.org/en/stable/) seems like a good tool, though I've never used it. The docs for it look
+good too. Make a `./threefive3/tests/` folder to put tests in?

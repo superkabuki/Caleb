@@ -21,6 +21,6 @@ b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\xeaxx\x00\x00\x12\x
             cue.time_signal.json(),
             cue.info_section.json()
         );
-        println!("\n{}: {}", idx, json::to_pretty(fj, 4));
+        println!("\n{}: {:?}\n{}", idx, bytes, json::to_pretty(fj, 4));
     }
 }

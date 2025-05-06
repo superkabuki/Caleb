@@ -2,10 +2,12 @@
 
 Running cue.decode() with what code?
 
+CALEB: Look in `src/main.rs`. Run `cargo run` from the root of the rust project, if you have rust installed.
+I didn't implement `json()` or `show()` for `Cue`, just did a quick version in `main.rs`.
 
-Running `cue.decode()` on `b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\x9d\x90\xf8\x00\x00\xe7\xe0Y4"`
+The state of `Cue` after running `cue.decode()` on `b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\x9d\x90\xf8\x00\x00\xe7\xe0Y4"`
 
-results in:
+results in (converted to 'pretty' json for readability):
 
 ``` bash
 {
