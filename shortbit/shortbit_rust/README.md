@@ -2,6 +2,9 @@
 
 Running cue.decode() with what code?
 
+Adrian: This is the cue.py stuff? Cool. 
+Yeah man you're doing a good job, seriously.
+
 CALEB: Look in `src/main.rs`. Run `cargo run` from the root of the rust project, if you have rust installed.
 I didn't implement `json()` or `show()` for `Cue`, just did a quick version in `main.rs`.
 
