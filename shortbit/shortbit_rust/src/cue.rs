@@ -4,9 +4,9 @@ use crate::{info2::SpliceInfoSection, timesignal::TimeSignal};
 
 #[derive(Debug)]
 pub struct Cue {
-    info_section: SpliceInfoSection,
-    time_signal: TimeSignal,
-    bytes: Vec<u8>,
+    pub info_section: SpliceInfoSection,
+    pub time_signal: TimeSignal,
+    pub bytes: Vec<u8>,
 }
 
 impl Cue {

@@ -1,4 +1,4 @@
-use shortbit_rust::cue::Cue;
+use shortbit_rust::{cue::Cue, json};
 
 fn main() {
     use_cue();
@@ -11,9 +11,16 @@ b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\xa3\x0f8\x00\x00\xb
 b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\xdf{\xf8\x00\x00w\xb1T\xad",
 b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\xe2;\x18\x00\x00\xafm\xda\xf3",
 b"\xfc0\x16\x00\x00\x00\x00\x00\x00\x00\xff\xf0\x05\x06\xff+\xeaxx\x00\x00\x12\xdeN\xee"];
-    for bytes in list_o_bytes {
+    for (idx, bytes) in list_o_bytes.iter().enumerate() {
         let mut cue = Cue::new(bytes.to_vec());
         cue.decode();
-        println!("{:?}\n\n", cue);
+        // println!("{:?}\n\n", cue);
+        let fj = format!(
+            r#"{{"bytes":{:?},"time_signal":{},"info_section":{}}}"#,
+            cue.bytes,
+            cue.time_signal.json(),
+            cue.info_section.json()
+        );
+        println!("\n{}: {}", idx, json::to_pretty(fj, 4));
     }
 }

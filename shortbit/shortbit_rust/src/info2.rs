@@ -2,7 +2,7 @@
 
 //#![allow(unused)]
 
-use crate::json::{CleanJson, Number};
+use crate::json::{self, CleanJson, Number};
 use crate::short::{SbType, ShortBit};
 use crate::timesignal::TimeSignal;
 use num_bigint::BigInt;
@@ -171,6 +171,16 @@ impl SpliceInfoSection {
     /// returns instance as a `kv_clean`ed map
     pub fn get(&self) -> BTreeMap<String, CleanJson> {
         self.kv_clean()
+    }
+
+    /// returns self as `kv_clean`ed json
+    pub fn json(&self) -> String {
+        json::to_json(self.kv_clean())
+    }
+
+    /// show prints self as formated json to stderr
+    pub fn show(&self) {
+        println!("{}", json::to_pretty(self.json(), 4));
     }
 
     /// get sap details from `SAPS`
