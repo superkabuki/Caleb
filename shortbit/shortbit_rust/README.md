@@ -1,5 +1,5 @@
-Tuesday 3:00 pm 
-Adrian here is my concerns with using the enums
+Tuesday 3:00 pm <br>
+Adrian: here are my concerns with using the enums
 * You lose the benefits of a strongly type language, mainly performance and memory allocation.It's not a big deal in this example, but when you call something 50 million times, it starts to add up.
 * function calls, you'll have to convert from the enums to a standard type before you call any function. Like as_90k, you want to be abtle to share that function for both info section and timesignal.
 * You also lose style points doing stuff like that, it's often frowned up in the strongly typed language circles.  
