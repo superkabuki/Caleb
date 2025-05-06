@@ -16,7 +16,7 @@ static SAPS: [&'static str; 4] = [
     "No Sap Type",
 ];
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum SIType {
     Int(u64),
     Hex(String),
@@ -35,7 +35,7 @@ pub enum SIType {
 }
 
 /// The SCTE-35 splice info section
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct SpliceInfoSection {
     table_id: SIType,                 // hex
     section_syntax_indicator: SIType, // flag
@@ -190,7 +190,13 @@ impl SpliceInfoSection {
             SbType::Int(i) => i,
             _ => &BigInt::ZERO,
         };
-        let pts_adjustment_ticks = t.to_u64_digits().1[0];
+        let pts_adjustment_ticks = {
+            if t != &BigInt::ZERO {
+                t.to_u64_digits().1[0]
+            } else {
+                0
+            }
+        };
         SIType::TimeStamp(self.as_90k(pts_adjustment_ticks))
     }
 
@@ -198,7 +204,13 @@ impl SpliceInfoSection {
     fn map_sb_si(&self, v: &SbType) -> SIType {
         match v {
             SbType::Hex(h) => SIType::Hex(h.clone()),
-            SbType::Int(i) => SIType::Int(i.to_u64_digits().1[0]),
+            SbType::Int(i) => SIType::Int({
+                if i != &BigInt::ZERO {
+                    i.to_u64_digits().1[0]
+                } else {
+                    0
+                }
+            }),
             SbType::Flag(f) => SIType::Flag(f.clone()),
             SbType::Bytes(b) => SIType::Bytes(b.clone()),
             _ => SIType::None,

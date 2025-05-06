@@ -1,5 +1,6 @@
 //! src/lib.rs
 
+pub mod cue;
 pub mod info;
 pub mod info2;
 pub mod json;

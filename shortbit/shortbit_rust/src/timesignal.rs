@@ -9,7 +9,7 @@ use crate::{
     short::{SbType, ShortBit},
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum TSType {
     Int(u64),
     Hex(String),
@@ -25,7 +25,7 @@ pub enum TSType {
 }
 
 /// Table 11 - time_signal()
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct TimeSignal {
     command_length: TSType,
     command_type: TSType,
