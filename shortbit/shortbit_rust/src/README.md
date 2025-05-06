@@ -1,5 +1,10 @@
 # Notes on stuff
 
+Tuesday 12:30am 
+### cue.rs, that's what I wanted to see. Nice job.
+
+
+
 Monday 05/25/2025 6:00pm
 
 So earlier I was trying threefive3 and not using kv_clean to remove the None/null values. 
