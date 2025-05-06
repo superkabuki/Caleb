@@ -3,7 +3,19 @@
 Tuesday 12:30am 
 ### cue.rs, that's what I wanted to see. Nice job.
 
+* you could kv clean this way:
+     * dump a struct to a map 
+     * remove the nulls
+     * turn map into json
+ 
+ * Even better
+ * https://crates.io/crates/bevy_reflect
 
+
+
+![image](https://github.com/user-attachments/assets/b8b5e110-9013-40df-af88-12c97f3c65ac)
+
+---------------------------
 
 Monday 05/25/2025 6:00pm
 
