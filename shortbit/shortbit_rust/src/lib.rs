@@ -1,17 +1,17 @@
 //! src/lib.rs
 
-pub mod cue;
-pub mod info;
+// pub mod cue;
+// pub mod info;
 pub mod info2;
 pub mod json;
 pub mod short;
-pub mod timesignal;
+// pub mod timesignal;
 
 #[cfg(test)]
 mod tests {
     use crate::{
         json::{CleanJson, Number, to_pretty},
-        short::{SbType, ShortBit},
+        short::ShortBit,
     };
     use num_bigint::BigInt;
     use std::collections::BTreeMap;
@@ -20,11 +20,11 @@ mod tests {
     fn test_short_bit() {
         let mut sb = ShortBit::new("lefthandtoGod".as_bytes());
 
-        assert_eq!(sb.as_int(8), SbType::Int(BigInt::from(108)));
-        assert_eq!(sb.as_flag(None), SbType::Flag(false));
-        assert_eq!(sb.as_int(7), SbType::Int(BigInt::from(101)));
-        assert_eq!(sb.as_bytes(32), SbType::Bytes("ftha".as_bytes().to_vec()));
-        assert_eq!(sb.as_hex(17), SbType::Hex("0xdcc8".to_string()));
+        assert_eq!(sb.as_int(8), BigInt::from(108));
+        assert_eq!(sb.as_flag(), false);
+        assert_eq!(sb.as_int(7), BigInt::from(101));
+        assert_eq!(sb.as_bytes(32), "ftha".as_bytes().to_vec());
+        assert_eq!(sb.as_hex(17), "0xdcc8".to_string());
     }
 
     #[test]

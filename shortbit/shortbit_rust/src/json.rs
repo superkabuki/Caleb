@@ -2,12 +2,15 @@
 
 use std::collections::BTreeMap;
 
+use num_bigint::BigInt;
+
 /// `Number` types for json conversion
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Number {
     Float(f64),
     Byte(u8),
     Int(u64),
+    BigInt(BigInt),
     SIng(i64),
 }
 
@@ -20,13 +23,14 @@ impl Number {
             Float(n) => format!("{}", n),
             Byte(n) => format!("{}", n),
             Int(n) => format!("{}", n),
+            BigInt(n) => format!("{}", n),
             SIng(n) => format!("{}", n),
         }
     }
 }
 
 /// recursive clean json enum
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum CleanJson {
     Bool(bool),
     Number(Number),
