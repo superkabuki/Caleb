@@ -1,11 +1,11 @@
 //! src/lib.rs
 
-// pub mod cue;
+pub mod cue;
 // pub mod info;
 pub mod info2;
 pub mod json;
 pub mod short;
-// pub mod timesignal;
+pub mod timesignal;
 
 #[cfg(test)]
 mod tests {
