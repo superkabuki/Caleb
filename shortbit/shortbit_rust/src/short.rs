@@ -24,11 +24,11 @@ impl ShortBit {
 
     /// starting at `self.idx` of `self.bits`, slice off `num_bits` of bits.
     pub fn as_int(&mut self, num_bits: usize) -> BigInt {
-        if self.idx >= num_bits {
-            self.forward(num_bits);
-            return &self.bits >> self.idx & !(!BigInt::ZERO << num_bits);
+        if self.idx < num_bits {
+            return BigInt::ZERO;
         }
-        BigInt::ZERO
+        self.forward(num_bits);
+        &self.bits >> self.idx & !(!BigInt::ZERO << num_bits)
     }
 
     /// returns the hex value of `num_bits` of bits
