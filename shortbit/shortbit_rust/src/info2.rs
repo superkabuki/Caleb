@@ -2,6 +2,8 @@
 
 #![allow(unused)]
 
+use num_bigint::BigInt;
+
 use crate::json::{self, CleanJson, Number};
 use crate::short::ShortBit;
 // use crate::timesignal::TimeSignal;
@@ -67,7 +69,29 @@ impl SpliceInfoSection {
 
     /// returns json struct, removing bad values
     fn kv_clean(&self) -> BTreeMap<String, CleanJson> {
-        todo!()
+        fn rec_clean(val: CleanJson) -> CleanJson {
+            match val {
+                CleanJson::Array(a) => {
+                    CleanJson::Array(a.iter().map(|v| rec_clean(v.to_owned())).collect())
+                }
+                CleanJson::Object(o) => CleanJson::Object(
+                    o.iter()
+                        .map(|(k, v)| (k.to_owned(), rec_clean(v.clone())))
+                        .collect(),
+                ),
+                _ => val,
+            }
+        }
+        self.iter()
+            .filter_map(|(k, v)| {
+                let val = rec_clean(v.clone());
+                if let CleanJson::Null = val {
+                    None
+                } else {
+                    Some((k.to_owned(), val.to_owned()))
+                }
+            })
+            .collect()
     }
 
     /// returns instance as a `kv_clean`ed map
@@ -105,12 +129,58 @@ impl SpliceInfoSection {
         self.protocol_version = CleanJson::Number(Number::BigInt(shortb.as_int(8)));
         self.encrypted_packet = CleanJson::Bool(shortb.as_flag());
         self.encryption_algorithm = CleanJson::Number(Number::BigInt(shortb.as_int(6)));
-        self.pts_adjustment = CleanJson::Number(Number::Float(
-            self.as_90k(shortb.as_int(33).to_u64_digits().1[0]),
-        ));
+        let bs = shortb.as_int(33).to_u64_digits().1;
+        self.pts_adjustment = CleanJson::Number(Number::Float(self.as_90k(if bs.len() > 0 {
+            bs[0]
+        } else {
+            0
+        })));
         self.cw_index = CleanJson::String(shortb.as_hex(8));
         self.tier = CleanJson::String(shortb.as_hex(12));
         self.splice_command_length = CleanJson::Number(Number::BigInt(shortb.as_int(12)));
         self.splice_command_type = CleanJson::Number(Number::BigInt(shortb.as_int(8)));
+    }
+
+    /// iterate through struct fields
+    fn iter(&self) -> Iter<'_> {
+        Iter {
+            inner: self,
+            index: 0,
+        }
+    }
+}
+
+struct Iter<'a> {
+    inner: &'a SpliceInfoSection,
+    index: u8,
+}
+
+impl<'a> Iterator for Iter<'a> {
+    type Item = (&'a str, &'a CleanJson);
+    fn next(&mut self) -> Option<Self::Item> {
+        let ret = match self.index {
+            0 => ("table_id", &self.inner.table_id),
+            1 => (
+                "section_syntax_indicator",
+                &self.inner.section_syntax_indicator,
+            ),
+            2 => ("private", &self.inner.private),
+            3 => ("sap_type", &self.inner.sap_type),
+            4 => ("sap_details", &self.inner.sap_details),
+            5 => ("section_length", &self.inner.section_length),
+            6 => ("protocol_cersion", &self.inner.protocol_version),
+            7 => ("encrypted_packet", &self.inner.encrypted_packet),
+            8 => ("encryption_algorithm", &self.inner.encryption_algorithm),
+            9 => ("pts_adjustment", &self.inner.pts_adjustment),
+            10 => ("cw_index", &self.inner.cw_index),
+            11 => ("tier", &self.inner.tier),
+            12 => ("splice_command_length", &self.inner.splice_command_length),
+            13 => ("splice_command_type", &self.inner.splice_command_type),
+            14 => ("descriptor_loop_length", &self.inner.descriptor_loop_length),
+            15 => ("crc", &self.inner.crc),
+            _ => return None,
+        };
+        self.index += 1;
+        Some(ret)
     }
 }
